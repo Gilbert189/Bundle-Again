@@ -3,24 +3,183 @@
 const BundleAgain = {
     vars: Object.create(null), // No JavaScript cheese
     loop: false,
-    running: false,
+    stop: false,
+    delay: 100,
+    nextIter: null,
 
-    log(text) {
+    write(text) {
         console.log(text);
     },
+
+    error(text, line) {
+        console.error(`[L:${line}]`, text);
+    },
     
-    prompt(text) {
+    ask(text) {
         return prompt(text);
     },
     
     exec(code) {
-        let lines = code.split("\n");
-        
-        for (let line of lines) {
-            let [command, input] = line.split(/ (.*)/s);
-            switch (command) {
-                case 
+        let command, input;
+        const replace = function(i) {
+            for (let name in this.vars) {
+                i = i.replaceAll(`{${name}}`, this.vars[name]);
             }
+            return i;
+        }.bind(this);
+        const assert = (truth, reason="Assertion failed") => {if (!truth) throw Error(reason)};
+        const assertEmpty = (reason="Incorrect input") => assert(!input?.length, reason);
+        const assertGreater = (num, reason="Incorrect input") => assert(input?.length > num, reason);
+        
+        let lines = code.split("\n");
+        let index = 1;
+        let skip = false;
+
+        try {
+            for (let line of lines) {
+                if (skip) {
+                    skip = false;
+                    continue;
+                }
+                [command, input] = line.split(/ (.*)/s);
+                switch (command) {
+                    case "def":
+                        assertGreater(0);
+                        [name, value] = input.split(/=(.*)/s);
+                        this.vars[name] = replace(value);
+                        break;
+                    case "arr":
+                        assertGreater(0);
+                        [name, value] = input.split(/=(.*)/s);
+                        this.vars[name] = value.split(",").map(replace);
+                        break;
+                    case "getarr":
+                        assertGreater(0);
+                        [name, i] = input.split(/,(.*)/s);
+                        i = parseInt(i);
+                        assert(this.vars[name].constructor === Array, `variable ${name} is not an array`);
+                        this.vars.res = this.vars[name][i];
+                        break;
+                    case "concat":
+                        assertGreater(0);
+                        vars = input.split(",");
+                        vars.forEach((name) => assert(this.vars[name] === Array, `variable ${name} is not an array`));
+                        this.vars.res = vars.reduce((xs, x) => xs.concat(this.vars[x]), []);
+                        break;
+                    case "write":
+                        assertGreater(0);
+                        this.write(replace(input));
+                        break;
+                    case "writeln":
+                        assertGreater(0);
+                        this.write(replace(input) + "<br>");
+                        break;
+                    case "break":
+                        assertEmpty();
+                        this.write("<br>");
+                        break;
+                    case "throw":
+                        assertGreater(0);
+                        this.write(this.vars[input]);
+                        break;
+                    case "ask":
+                        this.vars.res = this.ask(input);
+                        break;
+                    case "length":
+                        assertGreater(0);
+                        this.vars.res = this.vars[input].length;
+                        break;
+                    case "date":
+                        assertEmpty();
+                        this.vars.res = new Date().getDate();
+                        break;
+                    case "month":
+                        assertEmpty();
+                        this.vars.res = new Date().getMonth();
+                        break;
+                    case "year":
+                        assertEmpty();
+                        this.vars.res = new Date().getFullYear();
+                        break;
+                    case "hour":
+                        assertEmpty();
+                        this.vars.res = new Date().getHour();
+                        break;
+                    case "minute":
+                        assertEmpty();
+                        this.vars.res = new Date().getMinute();
+                        break;
+                    case "second":
+                        assertEmpty();
+                        this.vars.res = new Date().getSecond();
+                        break;
+                    case "add": 
+                        assertGreater(0);
+                        this.vars.res = input.split(",")
+                                        	 .map(x => parseFloat(replace(x)))
+                                        	 .reduce((xs, x) => xs + x, 0);
+                        this.vars.res = String(this.vars.res);
+                        break;
+                    case "sub": 
+                        assertGreater(0);
+                        this.vars.res = input.split(",")
+                                        	 .map(x => parseFloat(replace(x)))
+                                        	 .reduce((xs, x) => xs - x, 0);
+                        this.vars.res = String(this.vars.res);
+                        break;
+                    case "mul": 
+                        assertGreater(0);
+                        this.vars.res = input.split(",")
+                                        	 .map(x => parseFloat(replace(x)))
+                                        	 .reduce((xs, x) => xs * x, 1);
+                        this.vars.res = String(this.vars.res);
+                        break;
+                    case "div": 
+                        assertGreater(0);
+                        this.vars.res = input.split(",")
+                                        	 .map(x => parseFloat(replace(x)))
+                                        	 .reduce((xs, x) => xs / x, 1);
+                        this.vars.res = String(this.vars.res);
+                        break;
+                    case "loop":
+                        this.loop = true;
+                        break;
+                    case "stoploop":
+                        this.loop = false;
+                        break;
+                    case "if":
+                        match = /^(.*?)(=|!=|<|>)(.*?)$/.exec(input);
+                        assert(match !== null, "incorrect output");
+                        switch (match[2]) {
+                            case "=":
+                                skip = replace(match[1]) == replace(match[3]);
+                                break;
+                            case "!=":
+                                skip = replace(match[1]) != replace(match[3]);
+                                break;
+                            case ">":
+                                skip = replace(match[1]) > replace(match[3]);
+                                break;
+                            case "<":
+                                skip = replace(match[1]) < replace(match[3]);
+                                break;
+                        }
+                        skip = !skip;
+                        break;
+                    default:
+                        throw Error(`unknown command ${JSON.stringify(command)}`)
+                }
+                index++;
+            }
+
+            if (this.stop) {
+                this.stop == false;
+                clearTimeout(this.nextIter);
+            } else {
+                if (this.loop) this.nextIter = setTimeout(() => this.exec(code), this.delay);
+            }
+        } catch (e) {
+            this.error(e, index);
         }
     },
 }

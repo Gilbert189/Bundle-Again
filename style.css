@@ -3,6 +3,23 @@ html, body {
   width: 100%;
 }
 
+/* temporary */
+
 html {
+    background: linear-gradient(0.25turn, #ef2929, #ef5b2a, #ef8c2a, #efbe2a, #efef2a, #beef2a, #8cef2a, #5bef2a, #2aef2a, #2aef5b, #2aef8c, #2aefbe, #2aefef, #2abeef, #2a8cef, #2a5bef, #2a2aef, #5b2aef, #8c2aef, #be2aef, #ef2aef, #ef2abe, #ef2a8c, #ef2a5b, #ef2a2a);
+    animation: 60s linear infinite gradient;
+    font-size: 72px;
+    font-family: sans-serif;
+    background-size: 1000% 1000%;
+    padding: 2em 0.5em;
     
+}
+
+@keyframes gradient {
+    0%{
+        background-position: 1% 0%;
+    }
+    100%{
+        background-position: 110% 109%;
+    }
 }
