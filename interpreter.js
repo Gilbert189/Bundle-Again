@@ -18,8 +18,16 @@ const BundleAgain = {
     ask(text) {
         return prompt(text);
     },
+
+    clear() {
+        console.clear();
+    },
     
-    exec(code) {
+    async exec(code, looping=false) {
+        /* check if exec has been called */
+        if (this.nextIter !== null && !looping) return;
+        else if (!looping) this.loop = false;
+        
         let command, input;
         const replace = function(i) {
             for (let name in this.vars) {
@@ -36,6 +44,13 @@ const BundleAgain = {
         let skip = false;
 
         try {
+            if (lines[0] == "start") {
+                if (lines[lines.length - 1] == "end") {
+                    lines = lines.slice(1, -1);
+                } else {
+                    throw Error("bad end");
+                }
+            }
             for (let line of lines) {
                 if (skip) {
                     skip = false;
@@ -43,6 +58,10 @@ const BundleAgain = {
                 }
                 [command, input] = line.split(/ (.*)/s);
                 switch (command) {
+                    case "//":
+                    case "#":
+                    case "":
+                        break;
                     case "def":
                         assertGreater(0);
                         [name, value] = input.split(/=(.*)/s);
@@ -73,6 +92,10 @@ const BundleAgain = {
                     case "writeln":
                         assertGreater(0);
                         this.write(replace(input) + "<br>");
+                        break;
+                    case "wait":
+                        assertGreater(0);
+                        await new Promise(r => setTimeout(r, parseFloat(replace(input)) * 1000));
                         break;
                     case "break":
                         assertEmpty();
@@ -113,6 +136,15 @@ const BundleAgain = {
                         assertEmpty();
                         this.vars.res = new Date().getSecond();
                         break;
+                    case "clear":
+                        assertEmpty();
+                        this.clear();
+                        break;
+                    case "random":
+                        assertGreater(0);
+                        [low, high] = input.split(/,(.*)/s);
+                        this.vars.res = String(Math.round(Math.random() * (parseInt(replace(high)) - parseInt(replace(low)) + 1) + parseInt(replace(low))));
+                        break;
                     case "add": 
                         assertGreater(0);
                         this.vars.res = input.split(",")
@@ -124,7 +156,8 @@ const BundleAgain = {
                         assertGreater(0);
                         this.vars.res = input.split(",")
                                         	 .map(x => parseFloat(replace(x)))
-                                        	 .reduce((xs, x) => xs - x, 0);
+                                             .reverse()
+                                        	 .reduce((xs, x) => x - xs, 0);
                         this.vars.res = String(this.vars.res);
                         break;
                     case "mul": 
@@ -138,8 +171,17 @@ const BundleAgain = {
                         assertGreater(0);
                         this.vars.res = input.split(",")
                                         	 .map(x => parseFloat(replace(x)))
-                                        	 .reduce((xs, x) => xs / x, 1);
+                                             .reverse()
+                                        	 .reduce((xs, x) => x / xs, 1);
                         this.vars.res = String(this.vars.res);
+                        break;
+                    case "+":
+                        assertGreater(0);
+                        this.vars[input]++;
+                        break;
+                    case "-":
+                        assertGreater(0);
+                        this.vars[input]--;
                         break;
                     case "loop":
                         this.loop = true;
@@ -173,10 +215,11 @@ const BundleAgain = {
             }
 
             if (this.stop) {
-                this.stop == false;
+                this.stop = false;
                 clearTimeout(this.nextIter);
+                this.nextIter = null;
             } else {
-                if (this.loop) this.nextIter = setTimeout(() => this.exec(code), this.delay);
+                if (this.loop) this.nextIter = setTimeout(() => this.exec(code, true), this.delay);
             }
         } catch (e) {
             this.error(e, index);

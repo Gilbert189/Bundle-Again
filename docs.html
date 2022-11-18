@@ -1,0 +1,163 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Documentation</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div id=navbar>
+        <a class=left href="index.html">Bundle Again</a>
+        <a class=right href="workspace.html">Workspace</a>
+        <a class=right href="docs.html">Docs</a>
+        <a class=right href="https://replit.com/@Gilbert189/Bundle-Again">Repl</a>
+    </div>
+    <div id=content>
+        <h1>Bundle Again documentation</h1>
+        <p>
+            Here's the documentation of Bundle Again.
+        </p>
+
+        <h2 id=syntax>Syntax</h2>
+        <p>
+            Bundle Again syntax resembles shell commands, with the command type written first.
+        </p>
+        <h3 id=spaces>Strict spacing</h2>
+        <p>
+            Bundle Again is very strict in terms of spacing. Commands should be seperated with arguments <i>strictly</i> by a space.
+            <br>
+            For example, this is correct:
+            <pre>write Hello, world!</pre>
+            but this is not:
+            <pre>write  Hello, world!
+// This will print " Hello, world!" instead!</pre>
+        </p>
+        <p>
+            Commands that uses multiple arguments like <code>def</code>, <code>add</code>, or <code>if</code> should not have a space on the delimiter.
+            <br>
+            For example, this is correct:
+            <pre>add 1,2</pre>
+            but this is not:
+            <pre>add 1, 2</pre>
+        </p>
+        <h3 id=interpolation>Curly brackets</h2>
+        <p>
+            Curly brackets allows variables to be put on arguments.
+            <br>
+            For example, this calculates 1 + variable "a":
+            <pre>add 1,{a}</pre>
+        </p>
+        
+        <h2 id=mechanics>Mechanics</h2>
+        <h3 id=result>Storing results</h2>
+        <p>
+            The <code>res</code> variable contains the result of the last calculation. It is, in a way, a way the Bundle Again interpreter returns values.
+            <br>
+            For example, this sets the <code>res</code> variable to 3:
+            <pre>add 1,2</pre>
+            Note that there's nothing special on this variable. You can even set it to a custom value if you want to:
+            <pre>def res=1</pre>
+        </p>
+        <h3 id=loop>Looping</h2>
+        <p>
+            Looping in Bundle can be achieved by the <code>loop</code> command:
+            <pre>loop
+write Hello, world!</pre>
+            Note that running <code>loop</code> doesn't actually restart the code (putting the instruction pointer back at the first line), but instead the code is flagged as looped.
+            <br>
+            For example:
+            <pre>write a
+write b
+loop
+write c
+write d
+// this prints a, b, c and d over and over again</pre>
+            To stop looping, use <code>stoploop</code>.
+        </p>
+
+        <h2 id=commands>Commands</h2>
+        <p>Bundle Again supports these commands:</p>
+        <ul>
+            <li class=nobr>
+                <p><code>def [var]={val}</code>: set a value to a variable</p>
+            </li>
+            <li class=nobr>
+                <p><code>arr [var]={v1},{v2},...</code>: set a comma-seperated array to a variable</p>
+            </li>
+            <li class=nobr>
+                <p><code>getarr [var]=[i]</code>: get a value of array at specified index and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>concat [v1],[v2],...</code>: concatenates the given variables and set the result to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>length [var]</code>: get the length of variable and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>write {text}</code>: outputs the text to the terminal</p>
+            </li>
+            <li class=nobr>
+                <p><code>writeln {text}</code>: outputs the text to the terminal with a line break</p>
+            </li>
+            <li class=nobr>
+                <p><code>break</code>: output a line break to the terminal</p>
+            </li>
+            <li class=nobr>
+                <p><code>ask [text]</code>: prompt for input from user</p>
+            </li>
+            <li class=nobr>
+                <p><code>add {a},{b},...</code>: adds the given result and set the result to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>sub {a},{b},...</code>: subtracts the given result and set the result to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>mul {a},{b},...</code>: multiplies the given result and set the result to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>div {a},{b},...</code>: divides the given result and set the result to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>+ [var]</code>: increments the given variable</p>
+            </li>
+            <li class=nobr>
+                <p><code>- [var]</code>: decrements the given variable</p>
+            </li>
+            <li class=nobr>
+                <p><code>if {val}={val}</code>: compares two values together, if it's false then skip the next line (supported operations are <code>=</code>, <code>!=</code>, <code>&gt;</code>, and <code>&lt;</code>)</p>
+            </li>
+            <li class=nobr>
+                <p><code>second</code>: get the current second and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>minute</code>: get the current minute and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>hour</code>: get the current hour and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>day</code>: get the current day and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>month</code>: get the current month and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>year</code>: get the current year and set the value to <code>res</code></p>
+            </li>
+            <li class=nobr>
+                <p><code>random {low},{high}</code>: sets <code>res</code> to a random number on interval [low, high]</p>
+            </li>
+            <li class=nobr>
+                <p><code>wait {time}</code>: wait for the specified amount of time in seconds</p>
+            </li>
+            <li class=nobr>
+                <p><code>clear</code>: clears the console</p>
+            </li>
+        </ul>
+        <p><code>[...]</code> means a sequence of characters, while <code>{...}</code> means a sequence of characters that can use curly brackets.</p>
+    </div>
+</body>
+
+</html>
