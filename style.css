@@ -1,9 +1,10 @@
 html, body {
     height: 100%;
     width: 100%;
+    max-width: 100%;
     font-family: sans-serif;
     margin: 0px;
-    position: absolute
+    position: absolute;
 }
 
 :root {
@@ -16,6 +17,7 @@ html, body {
     padding: 0.125em;
     border-radius: 0.25em;
     font-size: 16px;
+    overflow-x: scroll
 }
 
 #content code, #content p {
@@ -29,6 +31,7 @@ html, body {
 
 #content p {
     line-height: 1.5em;
+    word-break: break-word;
 }
 
 .nobr {

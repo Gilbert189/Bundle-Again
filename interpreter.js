@@ -75,14 +75,14 @@ const BundleAgain = {
                     case "getarr":
                         assertGreater(0);
                         [name, i] = input.split(/,(.*)/s);
-                        i = parseInt(i);
+                        i = parseInt(replace(i));
                         assert(this.vars[name].constructor === Array, `variable ${name} is not an array`);
                         this.vars.res = this.vars[name][i];
                         break;
                     case "concat":
                         assertGreater(0);
                         vars = input.split(",");
-                        vars.forEach((name) => assert(this.vars[name] === Array, `variable ${name} is not an array`));
+                        vars.forEach((name) => assert(this.vars[name].constructor === Array, `variable ${name} is not an array`));
                         this.vars.res = vars.reduce((xs, x) => xs.concat(this.vars[x]), []);
                         break;
                     case "write":
