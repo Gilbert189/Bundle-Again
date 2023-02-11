@@ -31,6 +31,9 @@ html, body {
 
 #content p {
     line-height: 1.5em;
+}
+
+#content p, #content, ul {
     word-break: break-word;
 }
 
@@ -39,8 +42,8 @@ html, body {
 }
 
 #navbar {
-    width: calc(100vw - 2em);
-    padding: 1em;
+    width: calc(100vw - 1em);
+    padding: 0.5em;
     background-color: var(--color);
     border-bottom: 5px solid #0088d6;
     font-size: 16px;
@@ -65,9 +68,16 @@ html, body {
     text-decoration: none;
 }
 
+.logo {
+    height: 1em;
+    display: table-cell;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
 #content {
     margin: 1em;
-    margin-top: calc(1em + 3.5em);
+    margin-top: calc(1em + 3em);
     width: calc(100% - 2em);
     height: calc(100% - 6em);
     max-width: calc(100% - 2em);
@@ -84,7 +94,7 @@ html, body {
 }
 
 #output, #editor {
-    border-radius: 0.5em;
+    border-radius: 0.5em !important;
     min-height: 12em;
     overflow-y: scroll;
     padding: 0.5em;
@@ -112,6 +122,7 @@ html, body {
     color: white;
     margin: 0;
     font-size: initial !important;
+    overflow-x: clip;
 }
 
 #editor {
@@ -142,6 +153,7 @@ html, body {
 
 #buttons {
     overflow-x: scroll;
+    white-space: nowrap;
 }
 
 button, .button {
@@ -155,15 +167,19 @@ button, .button {
     color: black
 }
 
+/* */
+
 button:active, .button:active {
     animation: 0.2s ease-out alternate push;
 }
 
 @keyframes push {
     0%{
-        margin-top: 0em;
+        filter: none;
     }
     100%{
-        margin-top: 0.25em;
+        filter: brightness(0.2);
     }
 }
+
+/* */

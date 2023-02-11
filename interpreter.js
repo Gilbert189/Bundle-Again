@@ -5,6 +5,8 @@ const BundleAgain = {
     loop: false,
     stop: false,
     delay: 100,
+    version: "1.2.0",
+    deque: [],
     nextIter: null,
 
     write(text) {
@@ -38,19 +40,27 @@ const BundleAgain = {
         const assert = (truth, reason="Assertion failed") => {if (!truth) throw Error(reason)};
         const assertEmpty = (reason="Incorrect input") => assert(!input?.length, reason);
         const assertGreater = (num, reason="Incorrect input") => assert(input?.length > num, reason);
+        const escapeHTML = x => x.replace(/>/g, "&gt;").replace(/</g, "&lt;");
         
         let lines = code.split("\n");
         let index = 1;
         let skip = false;
 
         try {
+            // This is made to be intentionally ugly.
             if (lines[0] == "start") {
                 if (lines[lines.length - 1] == "end") {
                     lines = lines.slice(1, -1);
                 } else {
                     throw Error("bad end");
                 }
-            }
+            } else if (lines[lines.length - 1] == "end") {
+                if (lines[0] == "start") {
+                    lines = lines.slice(1, -1);
+                } else {
+                    throw Error("bad end");
+                }
+            } 
             for (let line of lines) {
                 if (skip) {
                     skip = false;
@@ -79,6 +89,11 @@ const BundleAgain = {
                         assert(this.vars[name].constructor === Array, `variable ${name} is not an array`);
                         this.vars.res = this.vars[name][i];
                         break;
+                    case "copy":
+                        assertGreater(0);
+                        [orig, copy] = input.split(/,(.*)/s);
+                        this.vars[copy] = this.vars[orig];
+                        break;
                     case "concat":
                         assertGreater(0);
                         vars = input.split(",");
@@ -87,11 +102,11 @@ const BundleAgain = {
                         break;
                     case "write":
                         assertGreater(0);
-                        this.write(replace(input));
+                        this.write(replace(escapeHTML(input)));
                         break;
                     case "writeln":
                         assertGreater(0);
-                        this.write(replace(input) + "<br>");
+                        this.write(replace(escapeHTML(input)) + "<br>");
                         break;
                     case "wait":
                         assertGreater(0);
@@ -208,6 +223,25 @@ const BundleAgain = {
                         }
                         skip = !skip;
                         break;
+                    case "push":
+                        assertGreater(0);
+                        input.split(",")
+                             .forEach(x => this.deque.push(replace(x)));
+                        break;
+                    case "pop":
+                        assertEmpty();
+                        this.vars.res = this.deque.pop()
+                        break;
+                    case "unshift":
+                        assertGreater(0);
+                        input.split(",")
+                             .reverse()
+                             .forEach(x => this.deque.unshift(replace(x)));
+                        break;
+                    case "shift":
+                        assertEmpty();
+                        this.vars.res = this.deque.shift();
+                        break;
                     default:
                         throw Error(`unknown command ${JSON.stringify(command)}`)
                 }
@@ -223,6 +257,7 @@ const BundleAgain = {
             }
         } catch (e) {
             this.error(e, index);
+            throw e;
         }
     },
 }

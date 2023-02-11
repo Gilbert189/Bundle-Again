@@ -1,20 +1,10 @@
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Documentation</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-</head>
-
+<!DOCTYPE html>
 <body>
-    <div id=navbar>
-        <a class=left href="index.html">Bundle Again</a>
-        <a class=right href="workspace.html">Workspace</a>
-        <a class=right href="docs.html">Docs</a>
-        <a class=right href="https://replit.com/@Gilbert189/Bundle-Again">Repl</a>
-    </div>
-    <div id=content>
+    <use template="_template.html"></use>
+    
+    <title>Documentation</title>
+    
+    <fill id=content>
         <h1>Bundle Again documentation</h1>
         <p>
             Here's the documentation of Bundle Again.
@@ -49,6 +39,29 @@
             For example, this calculates 1 + variable "a":
             <pre>add 1,{a}</pre>
         </p>
+        <h3 id=startend><code>start</code> and <code>end</code></h2>
+        <p>
+            On Bundle v1, the keyword <code>start</code> and <code>end</code> are required for the code to run.
+            However, in Bundle Again, they are not required; however you have to use them in pairs and in their correct locations if you want to use them.
+            <br>
+            For example, this is correct:
+            <pre>start
+write Hello, world!
+end
+</pre>
+            But these are not:
+            <pre>start
+write Hello, world!
+</pre>
+            <pre>write Hello, world!
+end
+</pre>
+            <pre>start
+end
+write Hello, world!
+</pre>
+            ... you get the idea.
+        </p>
         
         <h2 id=mechanics>Mechanics</h2>
         <h3 id=result>Storing results</h2>
@@ -76,88 +89,142 @@ write d
 // this prints a, b, c and d over and over again</pre>
             To stop looping, use <code>stoploop</code>.
         </p>
+        <h3 id=array>Arrays</h2>
+        <p>
+            Arrays allow you to store multiple values in a single variable.
+            <br>
+            To create an array, you can use the <code>arr</code> command. 
+            You can also use the <code>getarr</code> command to get the value of this 
+            Note that <code>getarr</code> counts from 0 (since that's how computers count).
+            <br>
+            For example:
+            <pre>arr array=1,2,3
+getarr a=2
+write {res}</pre>
+            You can also concatenate arrays using <code>concat</code>. It returns the concatenated array to the <code>res</code> variable.
+            <pre>arr array1=1,2,3
+arr array2=4,5,6
+concat array1,array2
+getarr res,4
+write {res}</pre>
+        </p>
+        <h3 id=deque>The deque</h2>
+        <p>
+            <i>Added in Bundle Again 1.2.</i><br>
+            The <a href="https://en.wikipedia.org/wiki/Double-ended_queue">deque</a> allows you to easily store multiple values in a single place. 
+            While it can be implemented using arrays, using deques are much more simpler.
+            <br>
+            To use the deque, you can use the commands <code>push</code>, <code>pop</code>, <code>unshift</code>, and <code>shift</code>:
+            <pre>push 1
+push 2,3
+// Current deque is [1, 2, 3]
+pop
+writeln Popped: {res}
+// Should write "Popped: 3"
+unshift 4
+// Current deque is [4, 1, 2]
+shift
+shift
+writeln Shifted: {res}
+// Should write "Shifted: 1"</pre>
+        </p>
 
         <h2 id=commands>Commands</h2>
         <p>Bundle Again supports these commands:</p>
         <ul>
-            <li class=nobr>
+            <li>
                 <p><code>def [var]={val}</code>: set a value to a variable</p>
             </li>
-            <li class=nobr>
+            <li>
+                <p><code>copy [orig],[copy]</code>: copy value of variable <code>[orig]</code> to <code>[copy]</code></p>
+            </li>
+            <li>
                 <p><code>arr [var]={v1},{v2},...</code>: set a comma-seperated array to a variable</p>
             </li>
-            <li class=nobr>
-                <p><code>getarr [var]={i}</code>: get a value of array at specified index and set the value to <code>res</code></p>
+            <li>
+                <p><code>getarr [var],{i}</code>: get a value of array at specified index and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>concat [v1],[v2],...</code>: concatenates the given variables and set the result to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>length [var]</code>: get the length of variable and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>write {text}</code>: outputs the text to the terminal</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>writeln {text}</code>: outputs the text to the terminal with a line break</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>break</code>: output a line break to the terminal</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>ask [text]</code>: prompt for input from user</p>
             </li>
-            <li class=nobr>
-                <p><code>add {a},{b},...</code>: adds the given result and set the result to <code>res</code></p>
+            <li>
+                <p><code>add {a},{b},...</code>: adds the given values and set the result to <code>res</code></p>
             </li>
-            <li class=nobr>
-                <p><code>sub {a},{b},...</code>: subtracts the given result and set the result to <code>res</code></p>
+            <li>
+                <p><code>sub {a},{b},...</code>: subtracts the given values and set the result to <code>res</code></p>
             </li>
-            <li class=nobr>
-                <p><code>mul {a},{b},...</code>: multiplies the given result and set the result to <code>res</code></p>
+            <li>
+                <p><code>mul {a},{b},...</code>: multiplies the given values and set the result to <code>res</code></p>
             </li>
-            <li class=nobr>
-                <p><code>div {a},{b},...</code>: divides the given result and set the result to <code>res</code></p>
+            <li>
+                <p><code>div {a},{b},...</code>: divides the given values and set the result to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>+ [var]</code>: increments the given variable</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>- [var]</code>: decrements the given variable</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>if {val}={val}</code>: compares two values together, if it's false then skip the next line (supported operations are <code>=</code>, <code>!=</code>, <code>&gt;</code>, and <code>&lt;</code>)</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>second</code>: get the current second and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>minute</code>: get the current minute and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>hour</code>: get the current hour and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>day</code>: get the current day and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>month</code>: get the current month and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>year</code>: get the current year and set the value to <code>res</code></p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>random {low},{high}</code>: sets <code>res</code> to a random number on interval [low, high]</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>wait {time}</code>: wait for the specified amount of time in seconds</p>
             </li>
-            <li class=nobr>
+            <li>
                 <p><code>clear</code>: clears the console</p>
+            </li>
+            <li>
+                <p><code>push {a},{b},...</code>: push the given values to the deque</p>
+            </li>
+            <li>
+                <p><code>pop</code>: pop the value at deque and set the value to <code>res</code></p>
+            </li>
+            <li>
+                <p><code>unshift {a},{b},...</code>: enqueue the given values to the deque</p>
+            </li>
+            <li>
+                <p><code>shift</code>: dequeue the value at deque and set the value to <code>res</code></p>
             </li>
         </ul>
         <p><code>[...]</code> means a sequence of characters, while <code>{...}</code> means a sequence of characters that can use curly brackets.</p>
-    </div>
-</body>
+    </fill>
 
-</html>
+    <script onload="FillerUp.load(this)" src="template.js"></script>
+</body>

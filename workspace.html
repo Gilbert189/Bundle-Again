@@ -1,22 +1,11 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Workspace</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <script src="interpreter.js"></script>
-</head>
-
 <body>
-    <div id=navbar>
-        <a class=left href="index.html">Bundle Again</a>
-        <a class=right href="workspace.html">Workspace</a>
-        <a class=right href="docs.html">Docs</a>
-        <a class=right href="https://replit.com/@Gilbert189/Bundle-Again">Repl</a>
-    </div>
-    <div id=content>
+    <script src="interpreter.js"></script>
+    <use template="_template.html"></use>
+    
+    <title>Workspace</title>
+    
+    <fill id=content>
         <div id=code>
             <div id="code-editor">
                 <textarea id=editor placeholder="Start coding..."></textarea>
@@ -31,8 +20,8 @@
             <button id="stop-button">Stop</button>
             <button id="reset-button">Reset</button>
         </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+    </fill>
 
-</html>
+    <script src="script.js"></script>
+    <script onload="FillerUp.load(this)" src="template.js"></script>
+</body>
